@@ -4,16 +4,25 @@
 package file;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 
+import javax.lang.model.element.Element;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class FileWindow extends JFrame{
 	MyIcon folder_on, folder_off;
+	ArrayList btList;
+	
+	
 
 	public FileWindow(){
 		setLayout(new FlowLayout());
+		btList = new ArrayList();
 		
 		//이미지 아이콘을 생성하되, 리소스 폴더로부터...
 		//Uniformed Resource Locator(URL) : 
@@ -36,7 +45,25 @@ public class FileWindow extends JFrame{
 		for(int i=0; i<list.size();i++){
 		String dirName=list.get(i);
 		MyPanel mp = new MyPanel(dirName, folder_off);
+		btList.add(mp);
 		add(mp);
+		
+		System.out.println("i는 :"+i+btList.get(i));
+		//System.out.println(btList.get(0));
+		//System.out.println(btList.size());
+		
+		mp.bt.addActionListener(new ActionListener() {
+			
+			
+			public void actionPerformed(ActionEvent e) {
+				Object obj = e.getSource();//이벤트를 일으킨 컴포넌트
+				
+				JButton btn=(JButton) obj;
+				btn.setIcon(folder_on);
+				System.out.println(btn);
+			}
+		});
+		
 		}
 		setSize(600, 500);
 		setVisible(true);
@@ -47,7 +74,7 @@ public class FileWindow extends JFrame{
 	
 	public ArrayList getDirList(){
 		
-		File file = new File("c:/");
+		File file = new File("C:/java_workspace2/project0327");
 		File[] fileList=file.listFiles();
 		ArrayList<String> dirList=new ArrayList<String>();
 		
