@@ -36,9 +36,16 @@ public class FileCopy extends JFrame{
 	OutputStreamWriter writer;
 	BufferedReader buff_in;
 	PrintWriter writer2;
+	CopyThread ct;
+	FileCopy filecopy;
+	String ori, dest;
+	Long len;
+	
+	
 	public FileCopy(){
 		setLayout(new FlowLayout());
 		
+		filecopy=this;
 		bar = new JProgressBar();
 		open_bt = new JButton("열기");
 		save_bt = new JButton("저장");
@@ -50,6 +57,8 @@ public class FileCopy extends JFrame{
 		
 		
 		bar.setPreferredSize(new Dimension(450, 50));
+		
+		
 		
 		add(bar);
 		add(open_bt);
@@ -70,7 +79,10 @@ public class FileCopy extends JFrame{
 			
 			
 			public void actionPerformed(ActionEvent e) {
-				copy();
+			
+				ct =new CopyThread(bar, ori_path, dest_path, ori, dest, len);
+				ct.start();
+				
 				
 			}
 		});
@@ -91,60 +103,22 @@ public class FileCopy extends JFrame{
 		int state=chooser.showOpenDialog(this);
 		if(state==chooser.APPROVE_OPTION){
 			File file=chooser.getSelectedFile();
-			String path = file.getAbsolutePath();
-			ori_path.setText(path);
+			ori = file.getAbsolutePath();
+			len = file.length();
+			
+			ori_path.setText(ori);
 			
 		}
 	}
 	
-	public void copy(){
-		String ori = ori_path.getText();
-		String dest = dest_path.getText();
-		String data;
-		try {
-			fis = new FileInputStream(ori);
-			reader = new InputStreamReader(fis, "utf-8");
-			buff_in = new BufferedReader(reader);
-			fos = new FileOutputStream(dest);
-			writer = new OutputStreamWriter(fos, "utf-8");
-			writer2 = new PrintWriter(writer);
-			while(true){
-				data=buff_in.readLine();
-				if(data==null)break;
-				writer2.write(data+"\n");
-				
-			}
-			JOptionPane.showMessageDialog(this,"복사완료");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			if(reader!=null){
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				}
-			if(writer!=null){
-				try {
-					writer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				}
-			
-		}
-	}
 	
 	public void save(){
 		int state=chooser.showOpenDialog(this);
 		chooser.setApproveButtonText("저장하기");
 		if(state==chooser.APPROVE_OPTION){
 			File file=chooser.getSelectedFile();
-			String path = file.getAbsolutePath();
-			dest_path.setText(path);
+			dest = file.getAbsolutePath();
+			dest_path.setText(dest);
 		}
 	}
 	public static void main(String[] args) {

@@ -124,9 +124,9 @@ public class MemoEditor extends JFrame {
 			if (writer2 != null) {
 					writer2.close();
 			}
-			if (fos != null) {
+			if (fis != null) {
 				try {
-					fos.close();
+					fis.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
